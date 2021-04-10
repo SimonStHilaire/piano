@@ -113,28 +113,31 @@ class MusicBox(DirectObject):
 
         port = "COM3"
 
-        founPorts = serial.tools.list_ports.comports()
+        foundPorts = serial.tools.list_ports.comports()
 
-        for foundPort, desc, hwid in sorted(founPorts):
-            infos = hwid.split(" ")
-            if infos[1] == "VID:PID=1A86:7523":
-                port = foundPort
+        for info in foundPorts:
+            hwid = info.hwid.split(" ") 
+            print("hwid1 " + hwid[1])
+            if hwid[1] == "VID:PID=1A86:7523":
+                port = info.device
                 break
-
 
         self.initialized = False
 
         try:
             if SERIAL_ACTIVE:
+                print("Tentative d'ouverture du port " + port)
                 self.serialPort = serial.Serial(port, 115200)
                 self.initialized = True
-                taskMgr.remove("update")
+                
                 print("Initialization de la communication réussie")                
             else:
                 print("Communication désactivée")
 
+            taskMgr.remove("update")
             self.mainLoop = taskMgr.add(self.update, "update")
-        except:
+        except Exception as e:
+            print(e)
             self.initialized = False
             print("Impossible de détecter une communication")
             quit()
@@ -146,6 +149,8 @@ class MusicBox(DirectObject):
             msg = self.serialPort.readline()
 
             if len(msg) == 51: #49 notes + \r + \n
+
+                print(msg)
     
                 strMsg = "".join(map(chr, msg))
 
@@ -154,17 +159,23 @@ class MusicBox(DirectObject):
                 count = 0
 
                 for i in range(len(values) - 2):
-                    if values[i] == '1':
-                        if i < len(self.notes):
-                            if (not USE_FADE_IN) and self.notesStates[i] == False: 
-                                self.notes[i].setVolume(1);
-                                self.notes[i].play()
-                            elif (not USE_FADE_OUT) and self.notesLoop[i] == True:
-                                self.notes[i].stop()
-
-                        self.notesStates[i] = True
+                    if i < len(self.notes):
+                        if values[i] == '1':
+                            
+                                if self.notesStates[i] == False:
+                                    if USE_FADE_IN: 
+                                        self.notes[i].setVolume(0)
+                                    else:
+                                        self.notes[i].setVolume(1)
+                                    self.notesStates[i] = True
+                                    self.notes[i].play()
+                        else:
+                            if self.notesStates[i] == True:
+                                if (not USE_FADE_OUT):
+                                    self.notes[i].stop()
+                                self.notesStates[i] = False
                     else:
-                        self.notesStates[i] = False
+                        break
 
         if USE_FADE_OUT:
             for i in range(len(self.notes)):
