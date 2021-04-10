@@ -149,9 +149,7 @@ class MusicBox(DirectObject):
             msg = self.serialPort.readline()
 
             if len(msg) == 51: #49 notes + \r + \n
-
-                print(msg)
-    
+   
                 strMsg = "".join(map(chr, msg))
 
                 values = list(strMsg)
