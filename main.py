@@ -25,6 +25,7 @@ USE_FADE_OUT = True
 FADE_OUT_SPEED = 5
 USE_FADE_IN = True
 FADE_IN_SPEED = 5
+PRINT_NOTES = False
 
 with open("config.json", encoding='utf-8') as configFile:
     config = json.load(configFile)
@@ -34,6 +35,7 @@ with open("config.json", encoding='utf-8') as configFile:
     FADE_OUT_SPEED = config["fadeOutSpeed"]
     USE_FADE_IN = config["useFadeIn"]
     FADE_IN_SPEED = config["fadeInSpeed"]
+    PRINT_NOTES = config["afficherNote"]
 
 
 
@@ -167,6 +169,9 @@ class MusicBox(DirectObject):
                                         self.notes[i].setVolume(1)
                                     self.notesStates[i] = True
                                     self.notes[i].play()
+
+                                    if PRINT_NOTES:
+                                        print("Note: " + str(i + 1))
                         else:
                             if self.notesStates[i] == True:
                                 if (not USE_FADE_OUT):

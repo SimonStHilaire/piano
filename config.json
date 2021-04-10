@@ -1,7 +1,8 @@
 {
-	"serialActive": true,
-	"useFadeOut": true,
-	"fadeOutSpeed": 5,
-	"useFadeIn": true,
-	"fadeInSpeed": 10
+  "serialActive": true,
+  "useFadeOut": true,
+  "fadeOutSpeed": 5,
+  "useFadeIn": true,
+  "fadeInSpeed": 10,
+  "afficherNote": false
 }
