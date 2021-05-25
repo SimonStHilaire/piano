@@ -4,5 +4,15 @@
   "fadeOutSpeed": 5,
   "useFadeIn": true,
   "fadeInSpeed": 10,
-  "afficherNote": false
+  "afficherNote": false,
+  "setsFolders":
+  [
+  	"sounds",
+  	"sounds2"
+  ],
+  "setsSwitchNotes":
+  [
+  	1,
+  	2
+  ]
 }
