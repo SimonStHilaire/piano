@@ -114,9 +114,11 @@ class MusicBox(DirectObject):
         foundPorts = serial.tools.list_ports.comports()
 
         for info in foundPorts:
+            print(info)
             hwid = info.hwid.split(" ") 
-            print("hwid1 " + hwid[1])
-            if len(hwid) > 0:
+            
+            if len(hwid) > 1:
+                print("hwid1 " + hwid[1])
                 if hwid[1] == "VID:PID=1A86:7523":
                     port = info.device
                     break
