@@ -93,7 +93,7 @@ class MusicBox(DirectObject):
             for folder in SETS_FOLDERS:
                 currentNotes = []
                 print("Processing folder {}".format(folder))
-                for file in files("./" + folder +"/"):
+                for file in sorted(files("./" + folder +"/")):
                     note = loader.loadSfx("./" + folder +"/" +file)
                     print(file)
                     if file.find("_c.") >= 0:
@@ -183,7 +183,7 @@ class MusicBox(DirectObject):
         if USE_FADE_OUT:
             for i in range(len(self.notes[self.currentSet])):
                 if self.notesStates[i] == False:
-                    if self.notes[self.currentSet][i].getVolume() > 0:
+                    if self.notes[self.currentSet][i].getVolume() > 0 and (self.notes[self.currentSet][i].getName().find("_l.") == -1):
                         newValue = self.notes[self.currentSet][i].getVolume() - FADE_OUT_SPEED * dt
                         if newValue < 0:
                             self.notes[self.currentSet][i].setVolume(0)
@@ -207,7 +207,8 @@ class MusicBox(DirectObject):
             if noteIndex == SETS_SWITCH_NOTES[j]:
                 self.note0Up()
                 self.currentSet = j
-                #print("Set change for {}".format(j))
+                if PRINT_NOTES:
+                    print("Set change for {}".format(j))
                 return True
 
         return False
